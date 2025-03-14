@@ -3,12 +3,14 @@
 namespace App\Http\Services;
 
 use App\DTO\VacancyDTO;
+use App\Models\Employer;
 use App\Models\Vacancy;
 
 class SaveVacancies
 {
-    public function save(array $vacancies)
+    public function save(array $vacancies, array $employers)
     {
-        return Vacancy::query()->insert($vacancies);
+        $vacancies = Vacancy::query()->insert($vacancies);
+        $employers = Employer::query()->insert($employers);
     }
 }

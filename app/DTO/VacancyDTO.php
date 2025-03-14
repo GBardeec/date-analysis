@@ -9,6 +9,7 @@ class VacancyDTO
     public function __construct(
         public int $id,
         public string $name,
+        public string $url,
         public bool $premium,
         public bool $has_test,
         public bool $response_letter_required,
@@ -22,6 +23,7 @@ class VacancyDTO
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'url' => $this->url,
             'premium' => $this->premium,
             'has_test' => $this->has_test,
             'response_letter_required' => $this->response_letter_required,

@@ -11,6 +11,7 @@ class VacancyDTOFactory extends BaseDTOFactory
         return new VacancyDTO(
             id: $vacancy['id'],
             name: $vacancy['name'],
+            url: $vacancy['url'],
             premium: $vacancy['premium'],
             has_test: $vacancy['has_test'],
             response_letter_required: $vacancy['response_letter_required'],

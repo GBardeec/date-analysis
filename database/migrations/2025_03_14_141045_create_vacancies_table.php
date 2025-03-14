@@ -12,8 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('vacancies', function (Blueprint $table) {
-            $table->unsignedBigInteger('id');
+            $table->unsignedBigInteger('id')->index();
             $table->string('name')->nullable();
+            $table->mediumText('url')->nullable();
             $table->boolean('premium');
             $table->boolean('has_test');
             $table->boolean('response_letter_required');
