@@ -5,18 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Employer extends Model
+class VacancySalary extends Model
 {
-    protected $table = 'employers';
-    protected $fillable = [
-        'id',
-        'name',
-        'url',
-        'accredited_it_employer',
-        'trusted',
-    ];
-
+    protected $table = 'vacancy_salary';
     public $timestamps = false;
+
+    protected $fillable = [
+        'from',
+        'to',
+        'currency',
+        'gross',
+    ];
 
     public function vacancy(): BelongsTo
     {

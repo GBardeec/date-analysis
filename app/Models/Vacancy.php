@@ -34,6 +34,6 @@ class Vacancy extends Model
 
     public function employers(): HasMany
     {
-        return $this->hasMany(Employer::class);
+        return $this->hasMany(VacancyEmployer::class);
     }
 }
