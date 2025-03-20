@@ -18,6 +18,7 @@ class GetVacanciesService
                 'query' => [
                     'text' => $vacancyName,
                     'per_page' => $countGet,
+                    'areaId' => 1,
                 ],
             ]
         );

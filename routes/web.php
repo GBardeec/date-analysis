@@ -2,10 +2,5 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
-Route::get('/check', function () {
-    return view('check');
-});
+Route::get('/{page}', 'App\Http\Controllers\IndexController')
+    ->where('page', '.*');
