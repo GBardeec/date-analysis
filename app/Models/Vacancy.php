@@ -18,6 +18,7 @@ class Vacancy extends Model
         'has_test',
         'response_letter_required',
         'snippet',
+        'key_skills',
         'published_at',
         'created_at',
     ];
@@ -25,6 +26,7 @@ class Vacancy extends Model
     protected $casts = [
         'id' => 'integer',
         'snippet' => 'json',
+        'key_skills' => 'json',
         'premium' => 'boolean',
         'has_test' => 'boolean',
         'response_letter_required' => 'boolean',
