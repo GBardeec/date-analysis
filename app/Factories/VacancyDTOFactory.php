@@ -16,6 +16,7 @@ class VacancyDTOFactory extends BaseDTOFactory
             has_test: $vacancy['has_test'],
             response_letter_required: $vacancy['response_letter_required'],
             snippet: $vacancy['snippet'],
+            key_skills: $vacancy['key_skills'],
             published_at: $vacancy['published_at'],
             created_at: $vacancy['created_at'],
         );

@@ -1,17 +1,16 @@
 <?php
 
-namespace App\Http\Services;
+namespace App\Http\Services\Vacancies\New;
 
-use App\DTO\VacancyDTO;
+use App\Models\Vacancy;
 use App\Models\VacancyArea;
 use App\Models\VacancyEmployer;
-use App\Models\Vacancy;
 use App\Models\VacancySalary;
 use Illuminate\Support\Facades\DB;
 
 class SaveVacancies
 {
-    public function save(array $vacancies, array $employers, array $salaries, array $areas): void
+    public function save(array $vacancies, array $employers, array $salaries, array $areas): bool
     {
         DB::transaction(function () use ($vacancies, $employers, $salaries, $areas) {
             try {
@@ -25,7 +24,10 @@ class SaveVacancies
                 DB::commit();
             } catch (\Exception $exception) {
                 DB::rollBack();
+                return false;
             }
         });
+
+        return true;
     }
 }

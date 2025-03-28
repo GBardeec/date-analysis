@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\VacanciesController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/check', function () {
-    dd(1);
+Route::group(['prefix' => 'vacancies'], function ($router) {
+	Route::post('/new', [VacanciesController::class, 'getNewVacancies']);
+	Route::get('/get', [VacanciesController::class, 'getAllVacancies']);
 });

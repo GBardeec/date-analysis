@@ -19,6 +19,7 @@ return new class extends Migration
             $table->boolean('has_test');
             $table->boolean('response_letter_required');
             $table->json('snippet')->nullable();
+            $table->json('key_skills')->nullable();
             $table->timestamp('published_at');
             $table->timestamp('created_at');
         });
