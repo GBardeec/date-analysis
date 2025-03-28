@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\NewVacanciesRequest;
-use App\Http\Services\Vacancies\GetAll\GetAllVacanciesService;
-use App\Http\Services\Vacancies\New\ProcessingVacancies;
+use App\Services\Vacancies\GetAll\GetAllVacanciesService;
+use App\Services\Vacancies\New\ProcessingVacancies;
+use App\Services\Vacancy\Statistic\GetStatistic;
+use Illuminate\Http\JsonResponse;
 
 class VacanciesController extends Controller
 {
@@ -15,9 +17,17 @@ class VacanciesController extends Controller
 	   return $processingVacancies->getNewVacancies($request->professional_role, $request->count);
     }
 
-    public function getAllVacancies()
+    public function getAllVacancies(): JsonResponse
     {
 		$getAllService = app()->make(GetAllVacanciesService::class);
+
 		return response()->json($getAllService->get());
+    }
+
+    public function getStatistic(): JsonResponse
+    {
+        $getStatistic = app()->make(GetStatistic::class);
+
+        return response()->json($getStatistic->get());
     }
 }

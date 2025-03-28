@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Services\Vacancies\New;
+namespace App\Services\Vacancies\New;
 
 use App\Factories\AreaDTOFactory;
 use App\Factories\EmployerDTOFactory;
@@ -77,7 +77,7 @@ class ProcessingVacancies
             $response = $client->get($url);
 
             $data = json_decode($response->getBody()->getContents(), true);
-
+            sleep(0.5);
             return $data['key_skills'] ?? [];
         } catch (GuzzleException $e) {
             Log::error('Ошибка при получении ключевых навыков: ' . $e->getMessage());
