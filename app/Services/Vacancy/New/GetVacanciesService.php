@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Services\Vacancies\New;
+namespace App\Services\Vacancies\New;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;

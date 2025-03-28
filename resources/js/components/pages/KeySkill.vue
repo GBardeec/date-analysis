@@ -6,80 +6,73 @@
             <canvas ref="skillsChart" class="mt-6"></canvas>
         </div>
     </div>
+
+    <div class="max-w-3xl mx-auto bg-white shadow-md rounded-lg overflow-hidden mb-5">
+        <table class="w-full">
+            <thead class="bg-gray-50">
+            <tr>
+                <th class="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Наименование
+                </th>
+                <th class="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Значение
+                </th>
+            </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+            <tr v-for="(value, name) in keySkills" :key="name">
+                <td class="px-4 py-2 text-center">
+                    <div class="text-sm text-gray-900">
+                        {{ name }}
+                    </div>
+                </td>
+                <td class="px-4 py-2 text-center">
+                    <div class="text-sm text-gray-900">
+                        {{ value }} шт.
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </template>
 
 <script>
-import axios from 'axios';
-import {BarController, BarElement, CategoryScale, Chart, Legend, LinearScale, Tooltip} from 'chart.js';
+import axios from 'axios'
+import {BarController, BarElement, CategoryScale, Chart, Legend, LinearScale, Tooltip} from 'chart.js'
 
-Chart.register(BarController, BarElement, CategoryScale, LinearScale, Tooltip, Legend);
+Chart.register(BarController, BarElement, CategoryScale, LinearScale, Tooltip, Legend)
 
 export default {
     name: "KeySkill",
     data() {
         return {
-            vacancies: [],
-            keySkillsAnalysis: {},
-            showStatistics: false,
+            keySkills: [],
             skillsChart: null,
-        };
+        }
     },
     mounted() {
-        this.getVacancies();
+        this.getKeySkills()
     },
     methods: {
-        getVacancies() {
-            axios.get('/api/vacancies/get')
+        getKeySkills() {
+            axios.get('/api/vacancies/key-skill/statistic')
                 .then(res => {
-                    this.vacancies = res.data;
-                    this.analyzeKeySkills();
+                    this.keySkills = res.data
+                    this.renderChart()
                 })
                 .catch(error => {
-                    console.error('Ошибка при загрузке вакансий:', error);
-                });
-        },
-        analyzeKeySkills() {
-            const skillsCount = {};
-
-            this.vacancies.forEach(vacancy => {
-                if (vacancy.key_skills && Array.isArray(vacancy.key_skills)) {
-                    vacancy.key_skills.forEach(skill => {
-                        const skillName = skill.name;
-                        if (skillsCount[skillName]) {
-                            skillsCount[skillName]++;
-                        } else {
-                            skillsCount[skillName] = 1;
-                        }
-                    });
-                }
-            });
-
-            this.keySkillsAnalysis = Object.entries(skillsCount)
-                .sort((a, b) => b[1] - a[1])
-                .reduce((acc, [key, value]) => {
-                    acc[key] = value;
-                    return acc;
-                }, {});
-
-            this.renderChart();
+                    console.error('Ошибка при загрузке ключевых навыков:', error)
+                })
         },
         renderChart() {
             if (this.skillsChart) {
-                this.skillsChart.destroy();
+                this.skillsChart.destroy()
             }
 
-            const ctx = this.$refs.skillsChart.getContext('2d');
-
-            // const top30Skills = Object.entries(this.keySkillsAnalysis)
-            //     .sort((a, b) => b[1] - a[1])
-            //     .slice(0, 30);
-
-            const top30Skills = Object.entries(this.keySkillsAnalysis)
-                .sort((a, b) => b[1] - a[1])
-                .slice(0, 30);
-
-            const labels = top30Skills.map(skill => skill[0]);
-            const data = top30Skills.map(skill => skill[1]);
+            const ctx = this.$refs.skillsChart.getContext('2d')
+            const labels = Object.keys(this.keySkills)
+            const data = Object.values(this.keySkills)
 
             this.skillsChart = new Chart(ctx, {
                 type: 'bar',
@@ -102,7 +95,7 @@ export default {
                     responsive: true,
                     maintainAspectRatio: false
                 }
-            });
+            })
         },
     },
 }
@@ -110,6 +103,6 @@ export default {
 
 <style>
 canvas {
-    max-height: 400px;
+    max-height: 400px
 }
 </style>

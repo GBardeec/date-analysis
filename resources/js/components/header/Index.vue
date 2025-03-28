@@ -13,7 +13,7 @@
                 </li>
                 <li>
                     <router-link to="/" class="text-gray-700 hover: transition duration-300">
-                        Общий список
+                        Вакансии
                     </router-link>
                 </li>
                 <li>
@@ -21,21 +21,16 @@
                         Ключевые навыки
                     </router-link>
                 </li>
-<!--                <li>-->
-<!--                    <router-link to="/location" class="text-gray-700 hover: transition duration-300">-->
-<!--                        Расположение-->
-<!--                    </router-link>-->
-<!--                </li>-->
-<!--                <li>-->
-<!--                    <router-link to="/employers" class="text-gray-700 hover: transition duration-300">-->
-<!--                        Работодатели-->
-<!--                    </router-link>-->
-<!--                </li>-->
-<!--                <li>-->
-<!--                    <router-link to="/salaries" class="text-gray-700 hover: transition duration-300">-->
-<!--                        Зарплаты-->
-<!--                    </router-link>-->
-<!--                </li>-->
+                <li>
+                    <router-link to="/location" class="text-gray-700 hover: transition duration-300">
+                        Локации
+                    </router-link>
+                </li>
+                <li>
+                    <router-link to="/salaries" class="text-gray-700 hover: transition duration-300">
+                        Зарплаты
+                    </router-link>
+                </li>
             </ul>
         </nav>
     </header>
