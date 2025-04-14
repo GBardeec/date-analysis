@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Vacancies\GetAll;
+namespace App\Services\Vacancy\GetAll;
 
 use App\Models\Vacancy;
 use Illuminate\Database\Eloquent\Collection;

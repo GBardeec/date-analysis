@@ -1,11 +1,12 @@
 <template>
     <div class="container mx-auto px-6 py-8">
         <h1 class="text-3xl font-bold text-blue-600 mb-6">Диаграмма зарплат</h1>
+
         <div class="bg-white shadow-md rounded-lg p-6 mb-8">
             <h3 class="text-xl font-semibold text-gray-700 mb-4 flex justify-between">
                 <div>Распределение зарплат</div>
-                <div v-if="this.salaries && this.salaries[this.selectedOption]">
-                    Средняя: {{ this.salaries[this.selectedOption]['average'] }} руб.
+                <div v-if="salaries && salaries[selectedOption]">
+                    Средняя: {{ salaries[selectedOption]['average'] }} руб.
                 </div>
             </h3>
             <div class="flex mb-4">
@@ -15,39 +16,94 @@
                     <option value="average">Средняя зарплата</option>
                 </select>
             </div>
-            <canvas ref="salaryChart" class="mt-6"></canvas>
+            <canvas ref="salaryChart" class="w-full" style="max-height: 500px; height: 400px;"></canvas>
+        </div>
+
+        <div class="bg-white shadow-md rounded-lg overflow-hidden mb-8">
+            <h3 class="text-xl font-semibold text-gray-700 p-6 pb-4">
+                Распределение зарплат
+            </h3>
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Наименование
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Значение
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                    <template v-if="salaries && salaries[selectedOption]">
+                        <tr v-for="(value, name) in salaries[selectedOption]['data']" :key="name">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                {{ name }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                {{ value }} шт.
+                            </td>
+                        </tr>
+                    </template>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="bg-white shadow-md rounded-lg overflow-hidden mb-8">
+            <h3 class="text-xl font-semibold text-gray-700 p-6 pb-4">
+                Соотношение навыков по зарплатам
+            </h3>
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Зарплатная категория
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Топ навыков
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                    <template v-if="skillsBySalary">
+                        <template v-for="(data, category) in skillsBySalary" :key="category">
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 align-top" :rowspan="Math.max(1, data?.top_skills?.length || 1)">
+                                    {{ category }}
+                                </td>
+                                <template v-if="data?.top_skills?.length > 0">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        {{ data.top_skills[0]?.skill || 'Неизвестный навык' }} ({{ data.top_skills[0]?.count || 0 }})
+                                    </td>
+                                </template>
+                                <template v-else>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        Нет данных
+                                    </td>
+                                </template>
+                            </tr>
+                            <template v-if="data?.top_skills?.length > 1">
+                                <tr v-for="(skill, index) in data.top_skills.slice(1)" :key="index">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        {{ skill?.skill || 'Неизвестный навык' }} ({{ skill?.count || 0 }})
+                                    </td>
+                                </tr>
+                            </template>
+                        </template>
+                    </template>
+                    <tr v-else>
+                        <td colspan="3" class="px-6 py-4 text-center text-sm text-gray-500">
+                            Загрузка данных...
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-
-    <div class="max-w-3xl mx-auto bg-white shadow-md rounded-lg overflow-hidden mb-5">
-        <table class="w-full">
-            <thead class="bg-gray-50">
-            <tr>
-                <th class="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Наименование
-                </th>
-                <th class="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Значение
-                </th>
-            </tr>
-            </thead>
-            <tbody class="bg-white divide-y divide-gray-200" v-if="this.salaries && this.salaries[this.selectedOption]">
-            <tr v-for="(value, name) in this.salaries[this.selectedOption]['data']" :key="name">
-                <td class="px-4 py-2 text-center">
-                    <div class="text-sm text-gray-900">
-                        {{ name }}
-                    </div>
-                </td>
-                <td class="px-4 py-2 text-center">
-                    <div class="text-sm text-gray-900">
-                        {{ value }} шт.
-                    </div>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-
 </template>
 
 <script>
@@ -58,13 +114,15 @@ export default {
     name: "SalariesPage",
     data() {
         return {
-            salaries: [],
+            salaries: null,
+            skillsBySalary: null,
             salaryChart: null,
             selectedOption: "from",
         }
     },
     mounted() {
         this.getSalaries()
+        this.getSkillsBySalaries()
     },
     methods: {
         getSalaries() {
@@ -75,10 +133,23 @@ export default {
                 })
                 .catch(error => {
                     console.error('Ошибка при загрузке зарплат:', error)
+                    this.salaries = {}
+                })
+        },
+        getSkillsBySalaries() {
+            axios.get('/api/vacancies/salaries/linked-skills')
+                .then(res => {
+                    this.skillsBySalary = res.data
+                })
+                .catch(error => {
+                    console.error('Ошибка при загрузке навыков:', error)
+                    this.skillsBySalary = {}
                 })
         },
         updateChart() {
-            this.renderChart()
+            if (this.salaries && this.salaries[this.selectedOption]) {
+                this.renderChart()
+            }
         },
         renderChart() {
             if (this.salaryChart) {
@@ -136,3 +207,30 @@ export default {
     },
 }
 </script>
+
+<style scoped>
+/* Единые стили для всех таблиц */
+table {
+    min-width: 100%;
+}
+th, td {
+    padding: 0.75rem 1.5rem;
+}
+thead th {
+    background-color: #f9fafb;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+tbody tr:nth-child(odd) {
+    background-color: #ffffff;
+}
+tbody tr:nth-child(even) {
+    background-color: #f9fafb;
+}
+.fade-enter-active, .fade-leave-active {
+    transition: opacity 0.5s;
+}
+.fade-enter, .fade-leave-to {
+    opacity: 0;
+}
+</style>

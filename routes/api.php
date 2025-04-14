@@ -14,11 +14,15 @@ Route::group(['prefix' => 'vacancies'], function () {
     Route::group(['prefix' => 'key-skill'], function () {
         Route::get('/statistic', [KeySkillController::class, 'index']);
     });
+
     Route::group(['prefix' => 'areas'], function () {
         Route::get('/statistic', [AreasController::class, 'index']);
+        Route::get('/linked-salaries', [AreasController::class, 'getSalaryByAreas']);
+        Route::get('/linked-skills', [AreasController::class, 'getSkillByAreas']);
     });
 
     Route::group(['prefix' => 'salaries'], function () {
         Route::get('/statistic', [SalariesController::class, 'index']);
+        Route::get('/linked-skills', [SalariesController::class, 'getSalaryBySkills']);
     });
 });

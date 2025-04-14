@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Vacancies\New;
+namespace App\Services\Vacancy\New;
 
 use App\Models\Vacancy;
 use App\Models\VacancyArea;

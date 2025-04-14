@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Vacancies\New;
+namespace App\Services\Vacancy\New;
 
 use App\Factories\AreaDTOFactory;
 use App\Factories\EmployerDTOFactory;
@@ -25,6 +25,7 @@ class ProcessingVacancies
     {
         Vacancy::query()->delete();
         $vacancies = $this->getVacanciesFromHHService($professionalRole, $count);
+
         return $this->saveVacancies($vacancies);
     }
 
