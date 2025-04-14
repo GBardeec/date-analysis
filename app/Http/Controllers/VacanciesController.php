@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\NewVacanciesRequest;
-use App\Services\Vacancies\GetAll\GetAllVacanciesService;
-use App\Services\Vacancies\New\ProcessingVacancies;
+use App\Services\Vacancy\GetAll\GetAllVacanciesService;
+use App\Services\Vacancy\New\ProcessingVacancies;
 use App\Services\Vacancy\Statistic\GetStatistic;
 use Illuminate\Http\JsonResponse;
 

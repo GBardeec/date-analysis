@@ -11,6 +11,7 @@
                         id="role"
                         v-model="selectedRole"
                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                        :disabled="isLoading"
                     >
                         <option v-for="role in professionalRoles" :key="role.id" :value="role.id">
                             {{ role.name }}
@@ -28,6 +29,7 @@
                         v-model="count"
                         placeholder="Введите количество"
                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                        :disabled="isLoading"
                     />
                     <p v-if="errors.count" class="text-red-500 text-sm mt-1">
                         {{ errors.count[0] }}
@@ -37,9 +39,17 @@
 
             <button
                 @click="processingNewVacancies"
-                class="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all"
+                class="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all relative"
+                :disabled="isLoading"
             >
-                Получить вакансии
+                <span v-if="!isLoading">Получить вакансии</span>
+                <span v-else class="flex items-center justify-center">
+                    <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Загрузка...
+                </span>
             </button>
         </div>
     </div>
@@ -55,6 +65,7 @@ export default {
             selectedRole: '96',
             count: 10,
             errors: {},
+            isLoading: false,
             professionalRoles: [
                 { id: '124', name: 'BI-аналитик, аналитик данных' },
                 { id: '165', name: 'DevOps-инженер' },
@@ -87,6 +98,7 @@ export default {
     methods: {
         processingNewVacancies() {
             this.errors = {};
+            this.isLoading = true;
 
             axios.post('/api/vacancies/new', {
                 professional_role: this.selectedRole,
@@ -94,7 +106,11 @@ export default {
             })
                 .then(res => {
                     if (res.data) {
-                        alert(`Успешно получено ${res.data.count} вакансий`);
+                        this.$notify({
+                            title: 'Успешно',
+                            text: `Получено ${res.data.count} вакансий`,
+                            type: 'success'
+                        });
                     }
                 })
                 .catch(error => {
@@ -102,10 +118,32 @@ export default {
                         this.errors = error.response.data.errors;
                     } else {
                         console.error('Ошибка:', error);
-                        alert('Произошла ошибка при получении вакансий');
+                        this.$notify({
+                            title: 'Ошибка',
+                            text: 'Произошла ошибка при получении вакансий',
+                            type: 'error'
+                        });
                     }
+                })
+                .finally(() => {
+                    this.isLoading = false;
                 });
         }
     }
 }
 </script>
+
+<style>
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+</style>

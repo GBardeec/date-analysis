@@ -34,8 +34,19 @@ class Vacancy extends Model
         'created_at' => 'timestamp',
     ];
 
+
+    public function salaries(): HasMany
+    {
+        return $this->hasMany(VacancySalary::class);
+    }
+
     public function employers(): HasMany
     {
         return $this->hasMany(VacancyEmployer::class);
+    }
+
+    public function areas(): HasMany
+    {
+        return $this->hasMany(VacancyArea::class);
     }
 }
