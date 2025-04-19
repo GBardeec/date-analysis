@@ -51,6 +51,15 @@
                         Зарплаты
                     </router-link>
                 </li>
+                <li>
+                    <router-link
+                        to="/report"
+                        class="px-3 py-2 rounded-md transition duration-300"
+                        :class="{'text-blue-600 font-medium bg-blue-50': $route.path === '/report', 'text-gray-700 hover:text-blue-500': $route.path !== '/report'}"
+                    >
+                        Отчет
+                    </router-link>
+                </li>
             </ul>
         </nav>
     </header>

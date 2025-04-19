@@ -5,6 +5,7 @@ import LocationPage from "./components/pages/Location.vue";
 import EmployersPage from "./components/pages/Employers.vue";
 import SalariesPage from "./components/pages/Salaries.vue";
 import Search from "./components/pages/Search.vue";
+import Report from "./components/pages/Report.vue";
 
 const routes = [
     {
@@ -36,6 +37,11 @@ const routes = [
         path: "/salaries",
         component: SalariesPage,
         name: "salaries",
+    },
+    {
+        path: "/report",
+        component: Report,
+        name: "report",
     },
 ];
 
