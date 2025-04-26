@@ -5,7 +5,7 @@
 
             <button
                 @click="downloadReport"
-                class="absolute top-8 right-6 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+                class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
             >
                 Скачать отчет
             </button>
@@ -102,24 +102,18 @@
                 <p class="mb-4 text-gray-600">Топ-3 навыка в разных зарплатных диапазонах:</p>
 
                 <div class="space-y-4">
-                    <div v-for="(data, range) in skillsBySalary" :key="range" class="border rounded-lg overflow-hidden" style="margin-top: 10px;">
-                        <button
-                            @click="toggleSalaryRange(range)"
-                            class="w-full flex justify-between items-center p-4 text-left hover:bg-gray-50 transition-colors"
+                    <div v-for="(data, range) in skillsBySalary" :key="range" class="border border-gray-400 rounded-lg overflow-hidden" style="margin-top: 10px;">
+                        <div
+                            class="w-full flex justify-between items-center p-4 text-left bg-gray-100 transition-colors"
                         >
                             <div>
                                 <h4 class="text-lg font-semibold text-blue-500">{{ range }}</h4>
                                 <p class="text-sm text-gray-500">Всего вакансий: {{ data.vacancy_count }}</p>
                             </div>
-                            <svg class="w-5 h-5 text-gray-500 transition-transform duration-200"
-                                 :class="{ 'transform rotate-180': expandedSalaryRanges.includes(range) }"
-                                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </button>
+                        </div>
 
-                        <div v-if="expandedSalaryRanges.includes(range)" class="px-4 pb-4">
-                            <div class="flex flex-wrap gap-2 mt-2">
+                        <div class="px-4 pb-4">
+                            <div class="flex flex-wrap gap-2 mt-4">
                                 <span v-if="data.top_skills" v-for="(item, index) in data.top_skills.slice(0, 3)"
                                       :key="item.skill"
                                       class="px-3 py-1 rounded-full text-sm"
@@ -129,6 +123,9 @@
                                           'bg-purple-100 text-purple-800': index === 2
                                       }">
                                     {{ item.skill }} ({{ item.count }})
+                                </span>
+                                <span v-if="!data.top_skills.length" class="text-sm text-gray-400">
+                                    Данные отсутствуют
                                 </span>
                             </div>
                         </div>
@@ -152,19 +149,13 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div v-for="(skills, city) in Object.entries(skillsByArea).slice(0, 5).reduce((obj, [key, val]) => ({ ...obj, [key]: val }), {})"
                          :key="city"
-                         class="border rounded-lg overflow-hidden">
-                        <button @click="toggleCity(city)"
-                                class="w-full flex justify-between items-center p-4 text-left hover:bg-gray-50 transition-colors">
+                         class="border border-gray-400 rounded-lg overflow-hidden">
+                        <div class="w-full flex justify-between items-center p-4 text-left bg-gray-100 transition-colors">
                             <h4 class="text-lg font-semibold text-blue-500">{{ city }}</h4>
-                            <svg class="w-5 h-5 text-gray-500 transition-transform duration-200"
-                                 :class="{ 'transform rotate-180': expandedCities.includes(city) }"
-                                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </button>
-                        <div v-if="expandedCities.includes(city)" class="px-4 pb-4">
-                            <div class="flex flex-wrap gap-2 mt-2">
-                                <span v-for="(skillObj, index) in skills.slice(0, 3)"
+                        </div>
+                        <div class="px-4 pb-4">
+                            <div class="flex flex-wrap gap-2 mt-4">
+                                <span v-for="(skillObj, index) in skills"
                                       :key="skillObj.skill"
                                       class="px-3 py-1 rounded-full text-sm"
                                       :class="{
@@ -173,6 +164,9 @@
                                           'bg-purple-100 text-purple-800': index === 2
                                       }">
                                     {{ skillObj.skill }} ({{ skillObj.count }})
+                                </span>
+                                <span v-if="!skills.length" class="text-sm text-gray-400">
+                                    Данные отсутствуют
                                 </span>
                             </div>
                         </div>
@@ -314,7 +308,7 @@ export default {
         },
         getSkillsAnalysis(data) {
             const topSkill = Object.entries(data).sort((a, b) => b[1] - a[1])[0]
-            return `Навык "${topSkill[0]}" встречается в ${topSkill[1]}% вакансий.`
+            return `Навык "${topSkill[0]}" встречается в ${topSkill[1]} вакансий.`
         },
         getMinSalary(data) {
             return Math.min(...Object.values(data)).toLocaleString('ru-RU')
@@ -324,7 +318,7 @@ export default {
         },
         getSalaryTrends(data) {
             const avg = Object.values(data).reduce((a, b) => a + b, 0) / Object.values(data).length
-            return `Средняя зарплата по всем городам составляет ${avg.toLocaleString('ru-RU', {maximumFractionDigits: 0})} руб.`
+            // return `Средняя зарплата по всем городам составляет ${avg.toLocaleString('ru-RU', {maximumFractionDigits: 0})} руб.`
         },
         getTopSalaries(data, count) {
             return Object.entries(data).sort((a, b) => b[1] - a[1]).slice(0, count)
@@ -339,22 +333,6 @@ export default {
             document.body.appendChild(element)
             element.click()
             document.body.removeChild(element)
-        },
-
-        // ui
-        toggleSalaryRange(range) {
-            if (this.expandedSalaryRanges.includes(range)) {
-                this.expandedSalaryRanges = this.expandedSalaryRanges.filter(r => r !== range)
-            } else {
-                this.expandedSalaryRanges.push(range)
-            }
-        },
-        toggleCity(city) {
-            if (this.expandedCities.includes(city)) {
-                this.expandedCities = this.expandedCities.filter(c => c !== city)
-            } else {
-                this.expandedCities.push(city)
-            }
         },
     }
 }

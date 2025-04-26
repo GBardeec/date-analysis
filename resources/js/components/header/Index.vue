@@ -2,7 +2,7 @@
     <header class="bg-white shadow-md">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
             <div class="text-2xl font-bold text-blue-600">
-                Анализ данных HH
+                Анализ данных <a href="https://hh.ru" target="_blank">hh.ru</a>
             </div>
 
             <ul class="flex space-x-6">
