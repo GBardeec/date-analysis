@@ -10,11 +10,11 @@
                 </div>
             </h3>
             <div class="flex mb-4">
-                <select v-model="selectedOption" @change="updateChart" class="border rounded px-3 py-2 mr-4">
-                    <option value="from">Зарплата от</option>
-                    <option value="to">Зарплата до</option>
-                    <option value="average">Средняя зарплата</option>
-                </select>
+<!--                <select v-model="selectedOption" @change="updateChart" class="border rounded px-3 py-2 mr-4">-->
+<!--                    <option value="from">Зарплата от</option>-->
+<!--                    <option value="to">Зарплата до</option>-->
+<!--                    <option value="average">Средняя зарплата</option>-->
+<!--                </select>-->
             </div>
             <canvas ref="salaryChart" class="w-full" style="max-height: 500px; height: 400px;"></canvas>
         </div>
@@ -33,6 +33,9 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Значение
                         </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Доля (%)
+                        </th>
                     </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
@@ -44,13 +47,15 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                 {{ value }} шт.
                             </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                {{ calculatePercentage(value, salaries[selectedOption]['data']) }}%
+                            </td>
                         </tr>
                     </template>
                     </tbody>
                 </table>
             </div>
         </div>
-
         <div class="bg-white shadow-md rounded-lg overflow-hidden mb-8">
             <h3 class="text-xl font-semibold text-gray-700 p-6 pb-4">
                 Соотношение навыков по зарплатам
@@ -135,6 +140,10 @@ export default {
                     console.error('Ошибка при загрузке зарплат:', error)
                     this.salaries = {}
                 })
+        },
+        calculatePercentage(value, data) {
+            const total = Object.values(data).reduce((sum, count) => sum + count, 0);
+            return total > 0 ? ((value / total) * 100).toFixed(2) : 0;
         },
         getSkillsBySalaries() {
             axios.get('/api/vacancies/salaries/linked-skills')

@@ -188,11 +188,11 @@
             </ul>
         </div>
     </div>
-    <div id="pages" >
-        <key-skill-page></key-skill-page>
-        <location-page></location-page>
-        <salaries-page></salaries-page>
-    </div>
+<!--    <div id="pages" >-->
+<!--        <key-skill-page></key-skill-page>-->
+<!--        <location-page></location-page>-->
+<!--        <salaries-page></salaries-page>-->
+<!--    </div>-->
 </template>
 
 

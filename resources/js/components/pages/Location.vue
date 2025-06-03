@@ -14,59 +14,15 @@
                     <tr>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Город</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Количество вакансий</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Доля (%)</th>
                     </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                     <tr v-for="(value, name) in areas" :key="name">
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ name }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ value }} шт.</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Таблица с навыками по городам -->
-        <div class="bg-white shadow-md rounded-lg overflow-hidden mb-8">
-            <h3 class="text-xl font-semibold text-gray-700 p-6 pb-4">Навыки по городам</h3>
-            <div class="overflow-x-auto">
-                <table class="w-full">
-                    <thead class="bg-gray-50">
-                    <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Город</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Топ навыков</th>
-                    </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                    <template v-if="skillsByArea">
-                        <template v-for="(skills, city) in skillsByArea" :key="city">
-                            <tr>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 align-top" :rowspan="Math.max(1, skills?.length || 1)">
-                                    {{ city }}
-                                </td>
-                                <template v-if="skills?.length > 0">
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        {{ skills[0].skill }} ({{ skills[0].count }})
-                                    </td>
-                                </template>
-                                <template v-else>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        Нет данных
-                                    </td>
-                                </template>
-                            </tr>
-                            <template v-if="skills?.length > 1">
-                                <tr v-for="(skill, index) in skills.slice(1)" :key="index">
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        {{ skill.skill }} ({{ skill.count }})
-                                    </td>
-                                </tr>
-                            </template>
-                        </template>
-                    </template>
-                    <tr v-else>
-                        <td colspan="2" class="px-6 py-4 text-center text-sm text-gray-500">
-                            Загрузка данных...
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {{ ((value / totalVacancies) * 100).toFixed(2) }}%
                         </td>
                     </tr>
                     </tbody>
@@ -74,26 +30,61 @@
             </div>
         </div>
 
-        <!-- Таблица с зарплатами по городам -->
         <div class="bg-white shadow-md rounded-lg overflow-hidden mb-8">
-            <h3 class="text-xl font-semibold text-gray-700 p-6 pb-4">Зарплаты по городам</h3>
+            <h3 class="text-xl font-semibold text-gray-700 p-6 pb-4">Навыки и зарплаты по городам</h3>
             <div class="overflow-x-auto">
                 <table class="w-full">
                     <thead class="bg-gray-50">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Город</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Средняя зарплата</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/6">Город</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/5">Топ навыков</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/4">Средняя зарплата</th>
                     </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
-                    <template v-if="salaryByArea">
-                        <tr v-for="(salary, city) in salaryByArea" :key="city">
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ city }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ salary.toLocaleString() }} руб.</td>
-                        </tr>
+                    <template v-if="skillsByArea || salaryByArea">
+                        <template v-for="city in allCities" :key="city">
+                            <tr>
+                                <!-- Город -->
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 align-top w-1/6"
+                                    :rowspan="Math.max(1, (skillsByArea?.[city]?.length || 1))">
+                                    {{ city }}
+                                </td>
+
+                                <!-- Первая строка навыков или "нет данных" -->
+                                <template v-if="skillsByArea?.[city]?.length">
+                                    <td class="px-6 py-4 text-sm text-gray-900 w-2/5 max-w-xs truncate" :title="skillsByArea[city][0].skill">
+                                <span class="inline-block max-w-xs truncate">
+                                    {{ skillsByArea[city][0].skill }} ({{ skillsByArea[city][0].count }})
+                                </span>
+                                    </td>
+                                </template>
+                                <template v-else>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 w-2/5">Нет данных</td>
+                                </template>
+
+                                <!-- Зарплата -->
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 w-1/4">
+                                    {{ salaryByArea?.[city] ? salaryByArea[city].toLocaleString() + ' руб.' : 'Нет данных' }}
+                                </td>
+                            </tr>
+
+                            <!-- Остальные навыки -->
+                            <template v-if="skillsByArea?.[city]?.length > 1">
+                                <tr v-for="(skill, index) in skillsByArea[city].slice(1)" :key="index">
+                                    <td class="px-6 py-4 text-sm text-gray-900 w-2/5 max-w-xs truncate" :title="skill.skill">
+                                <span class="inline-block max-w-xs truncate">
+                                    {{ skill.skill }} ({{ skill.count }})
+                                </span>
+                                    </td>
+                                    <!-- Пустая ячейка под зарплату -->
+                                    <td></td>
+                                </tr>
+                            </template>
+                        </template>
                     </template>
                     <tr v-else>
-                        <td colspan="2" class="px-6 py-4 text-center text-sm text-gray-500">
+                        <td colspan="3" class="px-6 py-4 text-center text-sm text-gray-500">
                             Загрузка данных...
                         </td>
                     </tr>
@@ -122,6 +113,16 @@ export default {
         this.getAreas()
         this.getSkillsByArea()
         this.getSalaryByArea()
+    },
+    computed: {
+        totalVacancies() {
+            return Object.values(this.areas).reduce((sum, count) => sum + count, 0);
+        },
+        allCities() {
+            const skillCities = Object.keys(this.skillsByArea || {});
+            const salaryCities = Object.keys(this.salaryByArea || {});
+            return [...new Set([...skillCities, ...salaryCities])];
+        },
     },
     methods: {
         getAreas() {
