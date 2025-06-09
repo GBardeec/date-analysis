@@ -42,16 +42,6 @@
                 >
                     <li>
                         <router-link
-                            to="/"
-                            class="block px-3 py-2 rounded-md transition duration-300"
-                            :class="{'text-blue-600 font-medium bg-blue-50': $route.path === '/', 'text-gray-700 hover:text-blue-500': $route.path !== '/'}"
-                            @click="isMenuOpen = false"
-                        >
-                            Статистика
-                        </router-link>
-                    </li>
-                    <li>
-                        <router-link
                             to="/search"
                             class="block px-3 py-2 rounded-md transition duration-300"
                             :class="{'text-blue-600 font-medium bg-blue-50': $route.path === '/search', 'text-gray-700 hover:text-blue-500': $route.path !== '/search'}"
@@ -62,12 +52,22 @@
                     </li>
                     <li>
                         <router-link
+                            to="/"
+                            class="block px-3 py-2 rounded-md transition duration-300"
+                            :class="{'text-blue-600 font-medium bg-blue-50': $route.path === '/', 'text-gray-700 hover:text-blue-500': $route.path !== '/'}"
+                            @click="isMenuOpen = false"
+                        >
+                            Статистика
+                        </router-link>
+                    </li>
+                    <li>
+                        <router-link
                             to="/key-skill"
                             class="block px-3 py-2 rounded-md transition duration-300"
                             :class="{'text-blue-600 font-medium bg-blue-50': $route.path === '/key-skill', 'text-gray-700 hover:text-blue-500': $route.path !== '/key-skill'}"
                             @click="isMenuOpen = false"
                         >
-                            Ключевые навыки
+                            Навыки
                         </router-link>
                     </li>
                     <li>
@@ -124,16 +124,6 @@
                     >
                         <li>
                             <router-link
-                                to="/"
-                                class="block px-3 py-2 rounded-md transition duration-300"
-                                :class="{'text-blue-600 font-medium bg-blue-50': $route.path === '/', 'text-gray-700 hover:text-blue-500': $route.path !== '/'}"
-                                @click="isMenuOpen = false"
-                            >
-                                Статистика
-                            </router-link>
-                        </li>
-                        <li>
-                            <router-link
                                 to="/search"
                                 class="block px-3 py-2 rounded-md transition duration-300"
                                 :class="{'text-blue-600 font-medium bg-blue-50': $route.path === '/search', 'text-gray-700 hover:text-blue-500': $route.path !== '/search'}"
@@ -144,12 +134,22 @@
                         </li>
                         <li>
                             <router-link
+                                to="/"
+                                class="block px-3 py-2 rounded-md transition duration-300"
+                                :class="{'text-blue-600 font-medium bg-blue-50': $route.path === '/', 'text-gray-700 hover:text-blue-500': $route.path !== '/'}"
+                                @click="isMenuOpen = false"
+                            >
+                                Статистика
+                            </router-link>
+                        </li>
+                        <li>
+                            <router-link
                                 to="/key-skill"
                                 class="block px-3 py-2 rounded-md transition duration-300"
                                 :class="{'text-blue-600 font-medium bg-blue-50': $route.path === '/key-skill', 'text-gray-700 hover:text-blue-500': $route.path !== '/key-skill'}"
                                 @click="isMenuOpen = false"
                             >
-                                Ключевые навыки
+                                Навыки
                             </router-link>
                         </li>
                         <li>
