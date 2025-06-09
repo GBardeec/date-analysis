@@ -6,7 +6,7 @@
             <h3 class="text-xl font-semibold text-gray-700 mb-4 flex justify-between">
                 <div>Распределение зарплат</div>
                 <div v-if="salaries && salaries[selectedOption]">
-                    Средняя: {{ salaries[selectedOption]['average'] }} руб.
+                    Средняя: {{ formattedAverage }} руб.
                 </div>
             </h3>
             <div class="flex mb-4">
@@ -128,6 +128,12 @@ export default {
     mounted() {
         this.getSalaries()
         this.getSkillsBySalaries()
+    },
+    computed: {
+        formattedAverage() {
+            const num = Math.round(this.salaries[this.selectedOption].average); // Округляем до целого
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+        }
     },
     methods: {
         getSalaries() {

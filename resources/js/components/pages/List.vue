@@ -66,7 +66,7 @@ export default {
         getSpecName() {
             axios.get('/api/specialization/active')
                 .then(res => {
-                    this.name = res.data.name;
+                    this.name = res.data.specialization_name;
                 })
                 .catch(error => {
                     console.error('Ошибка при загрузки активной вакансии:', error);

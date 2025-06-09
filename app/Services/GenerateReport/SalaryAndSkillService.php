@@ -3,13 +3,19 @@
 namespace App\Services\GenerateReport;
 
 use App\Models\VacancySalary;
+use App\Services\SpecializationService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class SalaryAndSkillService implements GenerateInterface
 {
-    public function generate(): array
+    public function generate(Request $request): array
     {
+        $specializationService = app()->make(SpecializationService::class);
+        $activeSpecializationId = $specializationService->getActiveSpecializationId($request);
+
         $vacancies = DB::table('vacancies')
+            ->where('specialization_id', $activeSpecializationId)
             ->join('vacancy_salary', 'vacancies.id', '=', 'vacancy_salary.vacancy_id')
             ->select(
                 'vacancies.key_skills',

@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Specializations;
+use App\Models\Vacancy;
 use App\Services\Vacancy\New\ProcessingVacancies;
 use Illuminate\Console\Command;
 
@@ -13,27 +14,14 @@ class GetNewVacancies extends Command
 
     public function handle()
     {
-        $specializations = Specializations::query()->get();
-        $activeSpecialization = $specializations->where('is_active', 1)->first();
+        Vacancy::query()->delete();
 
-        if ($activeSpecialization) {
-            $index = $specializations->search(function ($item) use ($activeSpecialization) {
-                return $item->id === $activeSpecialization->id;
-            });
+        $specializations = Specializations::all();
 
-            $currentSpecializations = $specializations->get($index + 1);
-
-            $activeSpecialization->is_active = false;
-            $activeSpecialization->save();
-        } else {
-            $currentSpecializations = Specializations::query()->first();
+        foreach ($specializations as $specialization) {
+            $processingVacancies = app()->make(ProcessingVacancies::class);
+            $processingVacancies->getNewVacancies($specialization->id, 30);
         }
-
-        $processingVacancies = app()->make(ProcessingVacancies::class);
-        $processingVacancies->getNewVacancies($currentSpecializations->id, 300);
-
-        $currentSpecializations->is_active = true;
-        $currentSpecializations->save();
 
         echo 'done';
     }

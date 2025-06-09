@@ -2,29 +2,47 @@
 
 namespace App\Services\GenerateReport;
 
+use App\Models\Vacancy;
+use App\Services\SpecializationService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class AreaAndSalaryService implements GenerateInterface
 {
-    public function generate(): array
+    public function generate(Request $request): array
     {
-        return DB::table('vacancy_area')
-            ->select(
-                'vacancy_area.name',
-                DB::raw('AVG(vacancy_salary.to) as average_salary')
-            )
-            ->join('vacancy_salary', function ($join) {
-                $join->on('vacancy_area.vacancy_id', '=', 'vacancy_salary.vacancy_id')
-                    ->where('vacancy_salary.currency', '=', 'RUR')
-                    ->whereNotNull('vacancy_salary.to');
+        $specializationService = app()->make(SpecializationService::class);
+        $activeSpecializationId = $specializationService->getActiveSpecializationId($request);
+
+        return Vacancy::query()
+            ->where('specialization_id', $activeSpecializationId)
+            ->whereHas('salaries', function($query) {
+                $query->where('currency', 'RUR')
+                    ->whereNotNull('to');
             })
-            ->groupBy('vacancy_area.name')
-            ->having('average_salary', '>', 0)
-            ->orderByDesc('average_salary')
+            ->with(['areas', 'salaries' => function($query) {
+                $query->where('currency', 'RUR')
+                    ->whereNotNull('to');
+            }])
             ->get()
-            ->mapWithKeys(function ($item) {
-                return [$item->name => (int) $item->average_salary];
+            ->flatMap(function ($vacancy) {
+                return $vacancy->areas->map(function ($area) use ($vacancy) {
+                    $salary = $vacancy->salaries->first();
+                    return $salary ? [
+                        'name' => $area->name,
+                        'salary' => $salary->to
+                    ] : null;
+                })->filter();
             })
+            ->groupBy('name')
+            ->map(function ($items) {
+                return (int) $items->avg('salary');
+            })
+            ->filter(function ($avgSalary) {
+                return $avgSalary > 0;
+            })
+            ->sortDesc()
+            ->take(30)
             ->toArray();
     }
 }

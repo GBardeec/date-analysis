@@ -1,6 +1,6 @@
 <template>
     <div class="container mx-auto px-6 py-8">
-        <h1 class="text-3xl font-bold text-blue-600 mb-6">Новая вакансия</h1>
+        <h1 class="text-3xl font-bold text-blue-600 mb-6">Новая специализация</h1>
         <div class="bg-white rounded-lg p-6 max-w-md mx-auto">
             <div class="flex flex-col">
                 <div class="mb-4">
@@ -18,23 +18,6 @@
                         </option>
                     </select>
                 </div>
-
-                <div class="mb-4">
-                    <label for="count" class="block text-gray-700 text-sm font-bold mb-2">
-                        Количество вакансий
-                    </label>
-                    <input
-                        type="number"
-                        id="count"
-                        v-model="count"
-                        placeholder="Введите количество"
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                        :disabled="isLoading"
-                    />
-                    <p v-if="errors.count" class="text-red-500 text-sm mt-1">
-                        {{ errors.count[0] }}
-                    </p>
-                </div>
             </div>
 
             <button
@@ -42,7 +25,7 @@
                 class="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all relative"
                 :disabled="isLoading"
             >
-                <span v-if="!isLoading">Получить вакансии</span>
+                <span v-if="!isLoading">Выбрать</span>
                 <span v-else class="flex items-center justify-center">
                     <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -52,6 +35,18 @@
                 </span>
             </button>
         </div>
+
+        <!-- Уведомление об успешном сохранении -->
+        <transition name="fade">
+            <div v-if="showSuccess" class="fixed bottom-4 right-4">
+                <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-lg shadow-lg flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span>Специализация успешно сохранена!</span>
+                </div>
+            </div>
+        </transition>
     </div>
 </template>
 
@@ -66,6 +61,7 @@ export default {
             count: 10,
             errors: {},
             isLoading: false,
+            showSuccess: false,
             professionalRoles: [
                 { id: '156', name: 'BI-аналитик, аналитик данных' },
                 { id: '160', name: 'DevOps-инженер' },
@@ -95,10 +91,28 @@ export default {
             ]
         };
     },
+    mounted() {
+        this.getActiveSpecialization()
+    },
     methods: {
+        getActiveSpecialization() {
+            axios.get('/api/specialization/active')
+                .then(res => {
+                    if (res.data) {
+                        this.selectedRole = res.data.specialization_id
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка:', error);
+                })
+                .finally(() => {
+                    this.isLoading = false;
+                });
+        },
         processingNewVacancies() {
             this.errors = {};
             this.isLoading = true;
+            this.showSuccess = false;
 
             const selectedRoleName = this.professionalRoles.find(
                 role => role.id === this.selectedRole
@@ -106,14 +120,10 @@ export default {
 
             localStorage.setItem('lastSelectedRole', selectedRoleName);
 
-            axios.post('/api/vacancies/new', {
-                professional_role: this.selectedRole,
-                count: this.count
-            })
+            axios.post('/api/specialization/save', {specialization_id: this.selectedRole})
                 .then(res => {
-                    if (res.data) {
-                        console.log('Выбранная роль:', localStorage.getItem('lastSelectedRole'));
-                    }
+                    this.showSuccess = true;
+                    setTimeout(() => this.showSuccess = false, 3000);
                 })
                 .catch(error => {
                     if (error.response?.status === 422) {
@@ -142,5 +152,13 @@ export default {
     to {
         transform: rotate(360deg);
     }
+}
+
+.fade-enter-active, .fade-leave-active {
+    transition: opacity 0.5s;
+}
+
+.fade-enter, .fade-leave-to {
+    opacity: 0;
 }
 </style>

@@ -7,6 +7,7 @@ use App\Services\Vacancy\GetAll\GetAllVacanciesService;
 use App\Services\Vacancy\New\ProcessingVacancies;
 use App\Services\Vacancy\Statistic\GetStatistic;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class VacanciesController extends Controller
 {
@@ -24,10 +25,10 @@ class VacanciesController extends Controller
 		return response()->json($getAllService->get());
     }
 
-    public function getStatistic(): JsonResponse
+    public function getStatistic(Request $request): JsonResponse
     {
         $getStatistic = app()->make(GetStatistic::class);
 
-        return response()->json($getStatistic->get());
+        return response()->json($getStatistic->get($request));
     }
 }

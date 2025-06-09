@@ -3,11 +3,16 @@
 namespace App\Services\Salaries;
 
 use App\Models\VacancySalary;
+use App\Services\SpecializationService;
+use Illuminate\Http\Request;
 
 class IndexService
 {
-    public function get(): array
+    public function get(Request $request): array
     {
+        $specializationService = app()->make(SpecializationService::class);
+        $activeSpecializationId = $specializationService->getActiveSpecializationId($request);
+
         $statisticSalary = [
             'from' => ['data' => [], 'average' => 0],
             'to' => ['data' => [], 'average' => 0],
@@ -15,6 +20,9 @@ class IndexService
         ];
 
         VacancySalary::query()
+            ->whereHas('vacancy', function($query) use ($activeSpecializationId) {
+                $query->where('specialization_id', $activeSpecializationId);
+            })
             ->where('currency', 'RUR')
             ->select(['from', 'to'])
             ->cursor()

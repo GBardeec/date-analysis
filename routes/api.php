@@ -8,12 +8,13 @@ use App\Http\Controllers\VacanciesController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'specialization'], function () {
-    Route::get('active', [SpecializationController::class, 'getActiveSpecialization']);
+    Route::get('active', [SpecializationController::class, 'getActive']);
+    Route::post('save', [SpecializationController::class, 'save']);
 });
 
 Route::group(['prefix' => 'vacancies'], function () {
     Route::get('/', [VacanciesController::class, 'getAllVacancies']);
-    Route::post('/new', [VacanciesController::class, 'getNewVacancies']);
+//    Route::post('/new', [VacanciesController::class, 'getNewVacancies']);
     Route::get('/statistic', [VacanciesController::class, 'getStatistic']);
 
     Route::group(['prefix' => 'key-skill'], function () {

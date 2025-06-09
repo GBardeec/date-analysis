@@ -23,10 +23,9 @@ class ProcessingVacancies
 
     public function getNewVacancies(int $professionalRole, int $count): bool
     {
-        Vacancy::query()->delete();
         $vacancies = $this->getVacanciesFromHHService($professionalRole, $count);
 
-        return $this->saveVacancies($vacancies);
+        return $this->saveVacancies($vacancies, $professionalRole);
     }
 
     private function getVacanciesFromHHService(string $professionalRole, int $count): array
@@ -34,7 +33,7 @@ class ProcessingVacancies
         return $this->getVacanciesService->getVacanciesFromHH($professionalRole, $count);
     }
 
-    private function saveVacancies(array $vacancies): bool
+    private function saveVacancies(array $vacancies, int $professionalRole): bool
     {
         $vacanciesToSave = [];
         $employerToSave = [];
@@ -49,7 +48,10 @@ class ProcessingVacancies
         foreach ($vacancies as $vacancy) {
             if (empty($vacancy['employer']['id'])) {
                 continue;
+
             }
+
+            $vacancy['specialization_id'] = $professionalRole;
 
             $vacancy['key_skills'] = $this->getKeySkills($vacancy['url']);
             $vacancyDTO = $vacancyFactory->fromArray($vacancy);
@@ -78,7 +80,7 @@ class ProcessingVacancies
             $response = $client->get($url);
 
             $data = json_decode($response->getBody()->getContents(), true);
-            sleep(0.5);
+            sleep(2);
             return $data['key_skills'] ?? [];
         } catch (GuzzleException $e) {
             Log::error('Ошибка при получении ключевых навыков: ' . $e->getMessage());

@@ -9,6 +9,7 @@ class VacancyDTO
     public function __construct(
         public int $id,
         public string $name,
+        public int $specialization_id,
         public string $url,
         public bool $premium,
         public bool $has_test,
@@ -24,6 +25,7 @@ class VacancyDTO
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'specialization_id' => $this->specialization_id,
             'url' => $this->url,
             'premium' => $this->premium,
             'has_test' => $this->has_test,

@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('specializations', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->boolean('is_active')->nullable();
+//            $table->boolean('is_active')->nullable();
         });
 
         DB::table('specializations')->insert([
