@@ -1,10 +1,10 @@
 import { createWebHistory, createRouter } from "vue-router";
 import ListPage from "./components/pages/List.vue";
+import MainPage from "./components/pages/Main.vue";
 import KeySkillPage from "./components/pages/KeySkill.vue";
 import LocationPage from "./components/pages/Location.vue";
 import EmployersPage from "./components/pages/Employers.vue";
 import SalariesPage from "./components/pages/Salaries.vue";
-import Search from "./components/pages/Search.vue";
 import Report from "./components/pages/Report.vue";
 
 const routes = [
@@ -13,11 +13,11 @@ const routes = [
         component: ListPage,
         name: "list",
     },
-    {
-        path: "/search",
-        component: Search,
-        name: "search",
-    },
+    // {
+    //     path: "/search",
+    //     component: Search,
+    //     name: "search",
+    // },
     {
         path: "/location",
         component: LocationPage,

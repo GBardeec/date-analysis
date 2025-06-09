@@ -188,11 +188,6 @@
             </ul>
         </div>
     </div>
-<!--    <div id="pages" >-->
-<!--        <key-skill-page></key-skill-page>-->
-<!--        <location-page></location-page>-->
-<!--        <salaries-page></salaries-page>-->
-<!--    </div>-->
 </template>
 
 
@@ -230,13 +225,19 @@ export default {
         this.getSkillsByArea()
         this.getSalaryByArea()
         this.getSkillsBySalaries()
-        this.name = this.getSpecName()
+        this.getSpecName()
     },
     methods: {
-        getSpecName() {
-            return localStorage.getItem('lastSelectedRole')
-        },
         // Загрузка данных
+        getSpecName() {
+            axios.get('/api/specialization/active')
+                .then(res => {
+                    this.name = res.data.name;
+                })
+                .catch(error => {
+                    console.error('Ошибка при загрузки активной вакансии:', error);
+                })
+        },
         getVacancies() {
             axios.get('/api/vacancies')
                 .then(res => {
@@ -353,16 +354,9 @@ export default {
                 .reduce((obj, [key, val]) => ({...obj, [key]: val.toLocaleString('ru-RU')}), {})
         },
         downloadReport() {
-            // 1. Сохраняем текущее состояние
-            const pagesContainer = document.getElementById('pages');
-            const hadHiddenClass = pagesContainer.classList.contains('hidden');
-            pagesContainer.classList.remove('hidden');
-
-            // 3. Создаем временный div с копией HTML
             const tempDiv = document.createElement('div');
             tempDiv.innerHTML = document.documentElement.outerHTML;
 
-            // Удаляем ненужные элементы
             const header = tempDiv.querySelector('header');
             if (header) header.remove();
 
@@ -371,20 +365,13 @@ export default {
 
             const modifiedHtml = tempDiv.innerHTML;
 
-            // 4. Создаем и запускаем загрузку
             const element = document.createElement('a');
             const blob = new Blob([modifiedHtml], { type: 'text/html' });
-            element.href = URL.createObjectURL(blob);
-            element.download = 'analytics_report.html';
-            document.body.appendChild(element);
-            element.click();
-            document.body.removeChild(element);
-
-            if (hadHiddenClass) {
-                setTimeout(() => {
-                    pagesContainer.classList.add('hidden');
-                }, 100);
-            }
+            element.href = URL.createObjectURL(blob)
+            element.download = 'analytics_report.html'
+            document.body.appendChild(element)
+            element.click()
+            document.body.removeChild(element)
         },
     }
 }

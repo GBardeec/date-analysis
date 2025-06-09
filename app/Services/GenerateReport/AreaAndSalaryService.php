@@ -11,12 +11,12 @@ class AreaAndSalaryService implements GenerateInterface
         return DB::table('vacancy_area')
             ->select(
                 'vacancy_area.name',
-                DB::raw('AVG(vacancy_salary.from) as average_salary')
+                DB::raw('AVG(vacancy_salary.to) as average_salary')
             )
             ->join('vacancy_salary', function ($join) {
                 $join->on('vacancy_area.vacancy_id', '=', 'vacancy_salary.vacancy_id')
                     ->where('vacancy_salary.currency', '=', 'RUR')
-                    ->whereNotNull('vacancy_salary.from');
+                    ->whereNotNull('vacancy_salary.to');
             })
             ->groupBy('vacancy_area.name')
             ->having('average_salary', '>', 0)

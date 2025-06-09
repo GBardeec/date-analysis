@@ -122,7 +122,7 @@ export default {
             salaries: null,
             skillsBySalary: null,
             salaryChart: null,
-            selectedOption: "from",
+            selectedOption: "to",
         }
     },
     mounted() {

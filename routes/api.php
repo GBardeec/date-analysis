@@ -3,8 +3,13 @@
 use App\Http\Controllers\AreasController;
 use App\Http\Controllers\KeySkillController;
 use App\Http\Controllers\SalariesController;
+use App\Http\Controllers\SpecializationController;
 use App\Http\Controllers\VacanciesController;
 use Illuminate\Support\Facades\Route;
+
+Route::group(['prefix' => 'specialization'], function () {
+    Route::get('active', [SpecializationController::class, 'getActiveSpecialization']);
+});
 
 Route::group(['prefix' => 'vacancies'], function () {
     Route::get('/', [VacanciesController::class, 'getAllVacancies']);

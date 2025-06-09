@@ -2,26 +2,17 @@
     <header class="bg-white shadow-md">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
             <div class="text-2xl font-bold text-blue-600">
-                Анализ данных <a href="https://hh.ru" target="_blank">hh.ru</a>
+                Атлас ИТ-профессий
             </div>
 
             <ul class="flex space-x-6">
-                <li>
-                    <router-link
-                        to="/search"
-                        class="px-3 py-2 rounded-md transition duration-300"
-                        :class="{'text-blue-600 font-medium bg-blue-50': $route.path === '/search', 'text-gray-700 hover:text-blue-500': $route.path !== '/search'}"
-                    >
-                        Новая вакансия
-                    </router-link>
-                </li>
                 <li>
                     <router-link
                         to="/"
                         class="px-3 py-2 rounded-md transition duration-300"
                         :class="{'text-blue-600 font-medium bg-blue-50': $route.path === '/', 'text-gray-700 hover:text-blue-500': $route.path !== '/'}"
                     >
-                        Вакансии
+                        Общая статистика
                     </router-link>
                 </li>
                 <li>
@@ -71,11 +62,3 @@ export default {
 }
 </script>
 
-<style scoped>
-.router-link-exact-active {
-    /* Дублируем стили для точного совпадения */
-    color: #2563eb;
-    font-weight: 500;
-    background-color: #eff6ff;
-}
-</style>

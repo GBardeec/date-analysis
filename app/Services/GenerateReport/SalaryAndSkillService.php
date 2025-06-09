@@ -26,7 +26,7 @@ class SalaryAndSkillService implements GenerateInterface
         ]);
 
         foreach ($vacancies as $vacancy) {
-            $avgSalary = $this->calculateAverageSalary($vacancy->from, $vacancy->to);
+            $avgSalary = $vacancy->to;
             if ($avgSalary === null) {
                 continue;
             }

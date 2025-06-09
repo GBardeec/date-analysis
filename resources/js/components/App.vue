@@ -4,15 +4,17 @@
         <main class="flex-grow">
             <router-view></router-view>
         </main>
+        <index-bottom></index-bottom>
     </div>
 </template>
 
 <script>
 import IndexHeader from "./header/Index.vue";
+import IndexBottom from "./bottom/Index.vue";
 
 export default {
     name: "App",
-    components: {IndexHeader},
+    components: {IndexBottom, IndexHeader},
 }
 </script>
 
