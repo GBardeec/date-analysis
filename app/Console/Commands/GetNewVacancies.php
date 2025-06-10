@@ -20,7 +20,7 @@ class GetNewVacancies extends Command
 
         foreach ($specializations as $specialization) {
             $processingVacancies = app()->make(ProcessingVacancies::class);
-            $processingVacancies->getNewVacancies($specialization->id, 30);
+            $processingVacancies->getNewVacancies($specialization->id, 300);
         }
 
         echo 'done';
