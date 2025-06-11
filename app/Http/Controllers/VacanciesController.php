@@ -18,11 +18,11 @@ class VacanciesController extends Controller
 	   return $processingVacancies->getNewVacancies($request->professional_role, $request->count);
     }
 
-    public function getAllVacancies(): JsonResponse
+    public function getAllVacancies(Request $request): JsonResponse
     {
 		$getAllService = app()->make(GetAllVacanciesService::class);
 
-		return response()->json($getAllService->get());
+		return response()->json($getAllService->get($request));
     }
 
     public function getStatistic(Request $request): JsonResponse

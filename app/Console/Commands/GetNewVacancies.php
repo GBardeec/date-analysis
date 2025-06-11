@@ -14,6 +14,7 @@ class GetNewVacancies extends Command
 
     public function handle()
     {
+        dd(Specializations::all()->toArray());
         Vacancy::query()->delete();
 
         $specializations = Specializations::all();
