@@ -42,9 +42,9 @@
                 >
                     <li>
                         <router-link
-                            to="/search"
+                            to="/"
                             class="block px-3 py-2 rounded-md transition duration-300"
-                            :class="{'text-blue-600 font-medium bg-blue-50': $route.path === '/search', 'text-gray-700 hover:text-blue-500': $route.path !== '/search'}"
+                            :class="{'text-blue-600 font-medium bg-blue-50': $route.path === '/', 'text-gray-700 hover:text-blue-500': $route.path !== '/'}"
                             @click="isMenuOpen = false"
                         >
                             Поиск
@@ -52,9 +52,9 @@
                     </li>
                     <li>
                         <router-link
-                            to="/"
+                            to="/info"
                             class="block px-3 py-2 rounded-md transition duration-300"
-                            :class="{'text-blue-600 font-medium bg-blue-50': $route.path === '/', 'text-gray-700 hover:text-blue-500': $route.path !== '/'}"
+                            :class="{'text-blue-600 font-medium bg-blue-50': $route.path === '/info', 'text-gray-700 hover:text-blue-500': $route.path !== '/info'}"
                             @click="isMenuOpen = false"
                         >
                             Статистика
@@ -124,9 +124,9 @@
                     >
                         <li>
                             <router-link
-                                to="/search"
+                                to="/"
                                 class="block px-3 py-2 rounded-md transition duration-300"
-                                :class="{'text-blue-600 font-medium bg-blue-50': $route.path === '/search', 'text-gray-700 hover:text-blue-500': $route.path !== '/search'}"
+                                :class="{'text-blue-600 font-medium bg-blue-50': $route.path === '/', 'text-gray-700 hover:text-blue-500': $route.path !== '/'}"
                                 @click="isMenuOpen = false"
                             >
                                 Поиск
@@ -134,9 +134,9 @@
                         </li>
                         <li>
                             <router-link
-                                to="/"
+                                to="/info"
                                 class="block px-3 py-2 rounded-md transition duration-300"
-                                :class="{'text-blue-600 font-medium bg-blue-50': $route.path === '/', 'text-gray-700 hover:text-blue-500': $route.path !== '/'}"
+                                :class="{'text-blue-600 font-medium bg-blue-50': $route.path === '/info', 'text-gray-700 hover:text-blue-500': $route.path !== '/info'}"
                                 @click="isMenuOpen = false"
                             >
                                 Статистика

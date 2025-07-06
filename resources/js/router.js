@@ -10,12 +10,12 @@ import Search from "./components/pages/Search.vue";
 
 const routes = [
     {
-        path: "/",
+        path: "/info",
         component: ListPage,
         name: "list",
     },
     {
-        path: "/search",
+        path: "/",
         component: Search,
         name: "search",
     },

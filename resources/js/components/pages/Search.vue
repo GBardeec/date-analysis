@@ -1,6 +1,11 @@
 <template>
     <div class="container mx-auto px-6 py-8">
-        <h1 class="text-3xl font-bold text-blue-600 mb-6">Новая специализация</h1>
+        <h1 class="text-3xl font-bold text-blue-600 mb-2">Выберите ИТ-профессию</h1>
+        <div class="mx-auto text-center">
+            <p class="text-gray-600 mb-6 max-w-2xl mx-auto" style="margin-top: 35px">
+                Рады приветствовать вас на странице Атласа ИТ-профессий. Тут вы можете увидеть, насколько востребованы различные профессиональные навыки, как они влияют на заработную плату, как они распределены по городам. Надеемся, что сервис поможет абитуриентам не ошибиться в выборе профессии, работодателям — эффективно планировать прием сотрудников, учебным заведениям — актуализировать свои учебные планы.
+            </p>
+        </div>
         <div class="bg-white rounded-lg p-6 max-w-md mx-auto">
             <div class="flex flex-col">
                 <div class="mb-4">
@@ -10,7 +15,8 @@
                     <select
                         id="role"
                         v-model="selectedRole"
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                        @change="processingNewVacancies"
+                        class="w-full max-w-lg px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                         :disabled="isLoading"
                     >
                         <option v-for="role in professionalRoles" :key="role.id" :value="role.id">
@@ -20,20 +26,13 @@
                 </div>
             </div>
 
-            <button
-                @click="processingNewVacancies"
-                class="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all relative"
-                :disabled="isLoading"
-            >
-                <span v-if="!isLoading">Выбрать</span>
-                <span v-else class="flex items-center justify-center">
-                    <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    Загрузка...
-                </span>
-            </button>
+            <div v-if="isLoading" class="mt-4 text-center">
+                <svg class="animate-spin inline-block h-5 w-5 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span class="ml-2 text-gray-600">Загрузка...</span>
+            </div>
         </div>
 
         <!-- Уведомление об успешном сохранении -->
